@@ -3,7 +3,7 @@ import { cutePets } from "../stores/pet-store";
 
 const HeaderComponent = () => {
   return (
-    <div class="p-4 w-full max-w-80">
+    <header class="p-4 w-full max-w-80">
       <nav class="p-4 flex justify-center items-center space-x-4">
         <h2 class="text-decoration-none">
           <NavLink href="/">Home</NavLink>
@@ -12,7 +12,7 @@ const HeaderComponent = () => {
           <NavLink href="/likedpets">Liked Pets {cutePets()?.length}</NavLink>
         </small>
       </nav>
-    </div>
+    </header>
   );
 };
 

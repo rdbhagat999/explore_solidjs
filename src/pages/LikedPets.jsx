@@ -4,18 +4,22 @@ const PetCardComponent = lazy(() => import("../components/PetCardComponent"));
 
 const LikedPets = () => {
   return (
-    <div>
+    <section>
       <h2 class="text-4xl">Liked Pets</h2>
-      <Suspense>
-        <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+      <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+        <Suspense fallback={<p>Loading liked pets...</p>}>
           <div class="flex flex-col justify-start items-stretch my-4 space-y-4">
             <For each={cutePets()}>
-              {(pet) => <PetCardComponent pet={pet} />}
+              {(pet) => (
+                <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+                  <PetCardComponent pet={pet} />
+                </ErrorBoundary>
+              )}
             </For>
           </div>
-        </ErrorBoundary>
-      </Suspense>
-    </div>
+        </Suspense>
+      </ErrorBoundary>
+    </section>
   );
 };
 

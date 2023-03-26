@@ -8,6 +8,8 @@ import {
   Suspense,
 } from "solid-js";
 const PetCardComponent = lazy(() => import("../components/PetCardComponent"));
+const SearchComponent = lazy(() => import("../components/SearchComponent"));
+
 import { fetchPets, fetchPetById } from "../api/fetch-pets";
 import { petStore, setPetStore } from "../stores/pet-store";
 
@@ -59,7 +61,7 @@ const Home = () => {
   });
 
   return (
-    <div>
+    <section>
       <h2 class="text-4xl">List of Awesome Pets</h2>
 
       <div class="flex justify-start items-center space-x-4 mt-2">
@@ -73,35 +75,46 @@ const Home = () => {
           Refetch Pets
         </button>
 
-        <input
+        {/* <input
           class="border border-gray-200 rounded-lg px-4 py-2"
           ref={input}
           type="number"
           name="search"
           placeholder="search pet by id"
           onBlur={[handlePetIdChange, input.value]}
-        />
+        /> */}
+
+        <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+          <Suspense fallback={<p>Loading search...</p>}>
+            <SearchComponent
+              ref={input}
+              handlePetIdChange={handlePetIdChange}
+            />
+          </Suspense>
+        </ErrorBoundary>
       </div>
 
       <Show
         when={petStore.pets}
         fallback={"Loading..."}>
         <div class="flex flex-col justify-start items-stretch my-4 space-y-4">
-          <Suspense>
-            <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+          <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+            <Suspense fallback={<p>Loading pets...</p>}>
               <For each={petStore.pets}>
                 {(pet) => (
-                  <PetCardComponent
-                    class="inline-block"
-                    pet={pet}
-                  />
+                  <ErrorBoundary fallback={(err) => <p>{err?.message}</p>}>
+                    <PetCardComponent
+                      class="inline-block"
+                      pet={pet}
+                    />
+                  </ErrorBoundary>
                 )}
               </For>
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </Show>
-    </div>
+    </section>
   );
 };
 
